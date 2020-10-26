@@ -11,7 +11,7 @@ class Bullet(object):
     window.blit(self.image, (self.x, self.y))
 
   def move(self):
-    self.y -= 10
+    self.y -= 8
 
 class Player(object):
   def __init__(self, x, y):

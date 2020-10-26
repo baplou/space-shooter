@@ -49,13 +49,13 @@ class Game(object):
   def keys(self):
     keys = pygame.key.get_pressed()
     if keys[pygame.K_UP] and self.player.y >= 10:
-      self.player.y -= 7
+      self.player.y -= 8
     elif keys[pygame.K_DOWN] and self.player.y <= 780:
-      self.player.y += 7
+      self.player.y += 8
     elif keys[pygame.K_LEFT] and self.player.x >= 10:
-      self.player.x -= 7
+      self.player.x -= 8
     elif keys[pygame.K_RIGHT] and self.player.x <= 780:
-      self.player.x += 7
+      self.player.x += 8
 
     if keys[pygame.K_SPACE] and self.shoot_counter >= 40:
       self.player.shoot()
@@ -83,6 +83,7 @@ class Game(object):
       for bullet in self.player.bullets:
         if self.collide(bullet, enemy):
           self.enemies.remove(enemy)
+          self.player.bullets.remove(bullet)
 
   @staticmethod
   def collide(obj1, obj2):
