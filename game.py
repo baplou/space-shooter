@@ -146,7 +146,7 @@ class Game(object):
   def endscreen(self):
     font = pygame.font.SysFont("comicsans", 40)
     
-    dead_label = font.render(f"You died with a score of {self.score} and with a highscore of {self.high_score}!", 1, (255,255,255))
+    dead_label = font.render(f"You died with a score of {self.score}!", 1, (255,255,255))
     restart_label = font.render('To restart the game press the letter "r".', 1, (255,255,255))
 
     self.screen.blit(dead_label, (self.WIDTH/2 - dead_label.get_width()/2, 330))
