@@ -9,12 +9,15 @@ All the assets for the game are made by me, and can be found in [assets](https:/
 * Pygame
 
 ### How to download the game?
-```shell
+```
 $ git clone https://github.com/baplou/space-shooter.git
 $ cd space-shooter
 $ ./game.py
 ```
 
 ### How to play?
-To move your player (green face) use the arrow keys.
-To shoot (forward) use space.
+To move your player use the arrow keys.
+To shoot use space.
+The point of the game is to stay alive as much as possible by avoiding the blue enemys moving around the screen.
+The longer you stay alive the bigger your score gets.
+However, if you shoot an enemy, your score increases by 20.
