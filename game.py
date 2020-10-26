@@ -16,9 +16,9 @@ class Game(object):
     self.game_active = True
     self.enemies = []
     self.player = Player(400, 500)
-    # "nec" = new enemy counter
     self.nec = 0
     self.score = 10
+    self.shoot_counter = 0
 
     self.bg_surface = pygame.transform.scale(pygame.image.load("assets/bg.png"), (self.WIDTH, self.HEIGHT)).convert()
     self.enemy_surface = pygame.image.load("assets/bad-guy.png").convert_alpha()
@@ -50,17 +50,39 @@ class Game(object):
     keys = pygame.key.get_pressed()
     if keys[pygame.K_UP] and self.player.y >= 10:
       self.player.y -= 7
-    if keys[pygame.K_DOWN] and self.player.y <= 780:
+    elif keys[pygame.K_DOWN] and self.player.y <= 780:
       self.player.y += 7
-    if keys[pygame.K_LEFT] and self.player.x >= 10:
+    elif keys[pygame.K_LEFT] and self.player.x >= 10:
       self.player.x -= 7
-    if keys[pygame.K_RIGHT] and self.player.x <= 780:
+    elif keys[pygame.K_RIGHT] and self.player.x <= 780:
       self.player.x += 7
+
+    if keys[pygame.K_SPACE] and self.shoot_counter >= 40:
+      self.player.shoot()
+      self.shoot_counter = 0
+    else:
+      self.shoot_counter += 1
+
+  def check_bullets(self):
+    for bullet in self.player.bullets:
+      if bullet.y >= 850:
+        self.player.bullets.remove(bullet)
+
+  def move_bullets(self):
+    for bullet in self.player.bullets:
+      bullet.move()
+
+  def update_player(self):
+    self.check_bullets()
+    self.move_bullets()
 
   def collision(self):
     for enemy in self.enemies:
       if self.collide(self.player, enemy):
         self.game_active = False
+      for bullet in self.player.bullets:
+        if self.collide(bullet, enemy):
+          self.enemies.remove(enemy)
 
   @staticmethod
   def collide(obj1, obj2):
@@ -73,11 +95,15 @@ class Game(object):
     self.check_enemy()
     self.collision()
     self.move_enemy()
+    self.update_player()
     self.keys()
 
   def redraw(self):
     for enemy in self.enemies:
       enemy.draw(self.screen)
+
+    for bullet in self.player.bullets:
+      bullet.draw(self.screen)
 
     self.player.draw(self.screen)
 
@@ -91,6 +117,7 @@ class Game(object):
       self.score = 0
       self.enemies.clear()
       self.player.x, self.player.y = 400, 400
+      self.player.bullets.clear()
       self.game_active = True
 
   def endscreen(self):
