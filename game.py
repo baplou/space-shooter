@@ -42,15 +42,15 @@ class Game(object):
     self.nec = 0
 
     self.bg_surface = pygame.transform.scale(pygame.image.load("assets/bg.png"), (self.WIDTH, self.HEIGHT)).convert()
-    self.enemy_surface = pygame.image.load("assets/bad-guy.png").convert()
+    self.enemy_surface = pygame.image.load("assets/bad-guy.png").convert_alpha()
 
     self.mainloop()
 
   def new_enemy(self):
-    if self.nec >= 30:
+    if self.nec >= 24:
       x_speed = random.choice([-1,1])
-      y_speed = random.randrange(4,10)
-      e = Enemy(random.randrange(0, 800), -50, pygame.transform.scale(self.enemy_surface, (random.randrange(40, 150), random.randrange(40, 150))), x_speed, y_speed)
+      y_speed = random.randrange(4,8)
+      e = Enemy(random.randrange(0, 800), -50, pygame.transform.scale(self.enemy_surface, (random.randrange(40, 130), random.randrange(40, 130))), x_speed, y_speed)
       self.enemies.append(e)
       self.nec = 0
     else:
@@ -67,10 +67,22 @@ class Game(object):
       elif enemy.y >= 850:
         self.enemies.remove(enemy)
 
+  def keys(self):
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_UP] and self.player.y >= 10:
+      self.player.y -= 7
+    if keys[pygame.K_DOWN] and self.player.y <= 780:
+      self.player.y += 7
+    if keys[pygame.K_LEFT] and self.player.x >= 10:
+      self.player.x -= 7
+    if keys[pygame.K_RIGHT] and self.player.x <= 780:
+      self.player.x += 7
+
   def update(self):
     self.check_enemy()
     self.new_enemy()
     self.move_enemy()
+    self.keys()
 
   def redraw(self):
     for enemy in self.enemies:
