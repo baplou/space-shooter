@@ -2,6 +2,7 @@
 import pygame
 import sys
 import random
+pygame.font.init()
 
 class Player(object):
   def __init__(self, x, y):
@@ -42,6 +43,7 @@ class Game(object):
     self.player = Player(400, 500)
     # "nec" = new enemy counter
     self.nec = 0
+    self.score = 10
 
     self.bg_surface = pygame.transform.scale(pygame.image.load("assets/bg.png"), (self.WIDTH, self.HEIGHT)).convert()
     self.enemy_surface = pygame.image.load("assets/bad-guy.png").convert_alpha()
@@ -83,7 +85,7 @@ class Game(object):
   def collision(self):
     for enemy in self.enemies:
       if self.collide(self.player, enemy):
-        print("collision")
+        self.game_active = False
 
   @staticmethod
   def collide(obj1, obj2):
@@ -109,7 +111,13 @@ class Game(object):
     self.redraw()
 
   def endscreen(self):
-    pass
+    font = pygame.font.SysFont("comicsans", 40)
+    
+    dead_label = font.render(f"You died with a score of {self.score}!", 1, (255,255,255))
+    restart_label = font.render('To restart the game press the letter "r".', 1, (255,255,255))
+
+    self.screen.blit(dead_label, (self.WIDTH/2 - dead_label.get_width()/2, 330))
+    self.screen.blit(restart_label, (self.WIDTH/2 - restart_label.get_width()/2, 380))
 
   def main(self):
     if self.game_active:
