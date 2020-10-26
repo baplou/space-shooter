@@ -8,6 +8,7 @@ class Player(object):
     self.x = x
     self.y = y
     self.image = pygame.image.load("assets/main.png").convert()
+    self.mask = pygame.mask.from_surface(self.image)
 
   def draw(self, window):
     window.blit(self.image, (self.x, self.y))
@@ -19,6 +20,7 @@ class Enemy(object):
     self.image = image
     self.x_speed = x_speed
     self.y_speed = y_speed
+    self.mask = pygame.mask.from_surface(self.image)
 
   def draw(self, window):
     window.blit(self.image, (self.x, self.y))
@@ -78,9 +80,21 @@ class Game(object):
     if keys[pygame.K_RIGHT] and self.player.x <= 780:
       self.player.x += 7
 
+  def collision(self):
+    for enemy in self.enemies:
+      if self.collide(self.player, enemy):
+        print("collision")
+
+  @staticmethod
+  def collide(obj1, obj2):
+    offset_x = obj2.x - obj1.x
+    offset_y = obj2.y - obj1.y
+    return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) != None
+
   def update(self):
-    self.check_enemy()
     self.new_enemy()
+    self.check_enemy()
+    self.collision()
     self.move_enemy()
     self.keys()
 
