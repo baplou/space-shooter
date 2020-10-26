@@ -110,6 +110,14 @@ class Game(object):
     self.update()
     self.redraw()
 
+  def endscreen_keys(self):
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_r]:
+      self.score = 0
+      self.enemies.clear()
+      self.player.x, self.player.y = 400, 400
+      self.game_active = True
+
   def endscreen(self):
     font = pygame.font.SysFont("comicsans", 40)
     
@@ -118,6 +126,8 @@ class Game(object):
 
     self.screen.blit(dead_label, (self.WIDTH/2 - dead_label.get_width()/2, 330))
     self.screen.blit(restart_label, (self.WIDTH/2 - restart_label.get_width()/2, 380))
+
+    self.endscreen_keys()
 
   def main(self):
     if self.game_active:
