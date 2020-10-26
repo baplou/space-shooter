@@ -20,11 +20,16 @@ class Game(object):
     self.score = 0
     self.shoot_counter = 0
     self.score_counter = 0
+    self.high_score = 0
 
     self.bg_surface = pygame.transform.scale(pygame.image.load("assets/bg.png"), (self.WIDTH, self.HEIGHT)).convert()
     self.enemy_surface = pygame.image.load("assets/bad-guy.png").convert_alpha()
 
     self.mainloop()
+
+  def highscore(self):
+    if self.score >= self.high_score:
+      self.high_score = self.score
 
   def new_enemy(self):
     if self.nec >= 24:
@@ -108,6 +113,7 @@ class Game(object):
     self.update_player()
     self.update_score()
     self.keys()
+    self.highscore()
 
   def redraw(self):
     for enemy in self.enemies:
@@ -120,7 +126,9 @@ class Game(object):
     
     font = pygame.font.SysFont("comicsans", 40)
     score_label = font.render(f"Score: {self.score}", 1, (255,255,255))
+    highscore_label = font.render(f"High Score: {self.high_score}", 1, (255,255,255))
     self.screen.blit(score_label, (5,3))
+    self.screen.blit(highscore_label, ((800 - highscore_label.get_width()) - 3, 3))
 
   def play(self):
     self.update()
@@ -138,7 +146,7 @@ class Game(object):
   def endscreen(self):
     font = pygame.font.SysFont("comicsans", 40)
     
-    dead_label = font.render(f"You died with a score of {self.score}!", 1, (255,255,255))
+    dead_label = font.render(f"You died with a score of {self.score} and with a highscore of {self.high_score}!", 1, (255,255,255))
     restart_label = font.render('To restart the game press the letter "r".', 1, (255,255,255))
 
     self.screen.blit(dead_label, (self.WIDTH/2 - dead_label.get_width()/2, 330))
