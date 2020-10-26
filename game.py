@@ -13,13 +13,19 @@ class Player(object):
     window.blit(self.image, (self.x, self.y))
 
 class Enemy(object):
-  def __init__(self, x, y, image):
+  def __init__(self, x, y, image, x_speed, y_speed):
     self.x = x
     self.y = y
     self.image = image
+    self.x_speed = x_speed
+    self.y_speed = y_speed
 
   def draw(self, window):
     window.blit(self.image, (self.x, self.y))
+
+  def move(self):
+    self.x += self.x_speed
+    self.y += self.y_speed
 
 class Game(object):
   def __init__(self):
@@ -32,6 +38,7 @@ class Game(object):
     self.game_active = True
     self.enemies = []
     self.player = Player(400, 500)
+    # "nec" = new enemy counter
     self.nec = 0
 
     self.bg_surface = pygame.transform.scale(pygame.image.load("assets/bg.png"), (self.WIDTH, self.HEIGHT)).convert()
@@ -41,27 +48,24 @@ class Game(object):
 
   def new_enemy(self):
     if self.nec >= 30:
-      e = Enemy(random.randrange(-200, -50), random.randrange(-200, -50), pygame.transform.scale(self.enemy_surface, (random.randrange(100, 200), random.randrange(100, 200))))
+      x_speed = random.choice([-1,1])
+      y_speed = random.randrange(4,10)
+      e = Enemy(random.randrange(0, 800), -50, pygame.transform.scale(self.enemy_surface, (random.randrange(40, 150), random.randrange(40, 150))), x_speed, y_speed)
       self.enemies.append(e)
       self.nec = 0
     else:
       self.nec += 1
-  
+
   def move_enemy(self):
     for enemy in self.enemies:
-      enemy.x += 10
-      enemy.y += 10
-
+      enemy.move()
+  
   def check_enemy(self):
     for enemy in self.enemies:
       if enemy.x >= 850:
-        pass
-      elif enemy.x <= -50:
-        pass
+        self.enemies.remove(enemy)
       elif enemy.y >= 850:
-        pass
-      elif enemy.y <= -50:
-        pass
+        self.enemies.remove(enemy)
 
   def update(self):
     self.check_enemy()
