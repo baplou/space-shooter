@@ -17,8 +17,9 @@ class Game(object):
     self.enemies = []
     self.player = Player(400, 500)
     self.nec = 0
-    self.score = 10
+    self.score = 0
     self.shoot_counter = 0
+    self.score_counter = 0
 
     self.bg_surface = pygame.transform.scale(pygame.image.load("assets/bg.png"), (self.WIDTH, self.HEIGHT)).convert()
     self.enemy_surface = pygame.image.load("assets/bad-guy.png").convert_alpha()
@@ -34,6 +35,13 @@ class Game(object):
       self.nec = 0
     else:
       self.nec += 1
+
+  def update_score(self):
+    if self.score_counter >= 120:
+      self.score += 1
+      self.score_counter = 0
+    else:
+      self.score_counter += 1
 
   def move_enemy(self):
     for enemy in self.enemies:
@@ -84,6 +92,7 @@ class Game(object):
         if self.collide(bullet, enemy):
           self.enemies.remove(enemy)
           self.player.bullets.remove(bullet)
+          self.score += 20
 
   @staticmethod
   def collide(obj1, obj2):
@@ -97,6 +106,7 @@ class Game(object):
     self.collision()
     self.move_enemy()
     self.update_player()
+    self.update_score()
     self.keys()
 
   def redraw(self):
@@ -107,6 +117,10 @@ class Game(object):
       bullet.draw(self.screen)
 
     self.player.draw(self.screen)
+    
+    font = pygame.font.SysFont("comicsans", 40)
+    score_label = font.render(f"Score: {self.score}", 1, (255,255,255))
+    self.screen.blit(score_label, (5,3))
 
   def play(self):
     self.update()
